@@ -6,7 +6,7 @@
 
 # 贡献
 
-这本书是由[Mozilla](https://mozilla.com/)创建，很多象你一样的开发者贡献完成，所有的源码都可以在[github](https://github.com/mozilla/serviceworker-cookbook)上面找到，欢迎大家贡献代码和提交request。
+这本书是由[Mozilla](https://mozilla.com/)发起，很多象你一样的开发者贡献完成，所有的源码都可以在[github](https://github.com/mozilla/serviceworker-cookbook)上面找到，欢迎大家贡献代码和提交request。
 
 缓存章节中用到的图片都可以在[lorempixel.com](http://lorempixel.com/)上找到。
 
@@ -42,9 +42,15 @@
 
 ## 推送富文本
 
+使用service worker推送富文本消息，可以定义消息的语言，振动模式以及关联的图片等。在[https://notifications.spec.whatwg.org/\#api](https://notifications.spec.whatwg.org/#api) 上你可以查看所有可以设置的参数，例如：可以从通知激活一组操作。
+
 ## 简单推送使用
 
-## 消息推送的标签
+使用Web Push API最简单的例子，推送一条消息给用户，即使在你的页面没有打开的情况下。
+
+## 消息推送的tag
+
+使用tag标记推送消息，将旧的消息替换为新的。这样可以向用户推送最新的消息，还可以将多个消息折叠为一个推送。
 
 ## 消息推送相关指标
 
