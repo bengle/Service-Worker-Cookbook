@@ -78,7 +78,7 @@
 
 ## 实时流程图
 
-介绍如何使用service worker实现Mozilla开发者网站上提供的工作流程图的例子，这个例子运行期间会在屏幕上打印出service worker运行的所有步骤日志。
+介绍如何使用service worker实现[Mozilla开发者网站上提供的工作流程图的例子](https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API/Using_Service_Workers)，这个例子运行期间会在屏幕上打印出service worker运行的所有步骤日志。
 
 ## 离线回调
 
@@ -126,5 +126,5 @@
 
 ## 渲染仓库
 
-本案例是NGA的一项提案，缓存插值模版内容，以避免在连续请求时获取模型和渲染的时间消耗。
+本案例是[NGA](https://wiki.mozilla.org/Gaia/Architecture_Proposal#Render_store)的一项提案，缓存插值模版内容，以避免在连续请求时获取模型和渲染的时间消耗。
 
