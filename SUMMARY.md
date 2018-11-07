@@ -1,6 +1,6 @@
 # Summary
 
 * [Introduction](README.md)
-* [网络与缓存](chapter1.md)
+* [network or cache](chapter1.md)
 * [Cache only](cache-only.md)
 
