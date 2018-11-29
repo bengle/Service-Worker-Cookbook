@@ -6,4 +6,5 @@
 * [Cache and Update](cache-and-update.md)
 * [Cache, update and refresh](cache-update-and-refresh.md)
 * [Embedded fallback](embedded-fallback.md)
+* [Push and Retrieve Payload](push-and-retrieve-payload.md)
 
