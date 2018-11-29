@@ -69,7 +69,7 @@ function fixHeight(evt) {
   var iframe = evt.target;
   var document = iframe.contentWindow.document.documentElement;
   iframe.style.height = document.getClientRects()[0].height + 'px';
-  
+
   if (window.parent !== window) {
     window.parent.document.body.dispatchEvent(new CustomEvent('iframeresize'));
   }
@@ -176,6 +176,103 @@ function fromCache(request) {
     });
   });
 }
+```
+
+index.html
+
+```html
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Cache only - ServiceWorker Cookbook</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+   iframe {
+     display: block;
+     margin: 1rem;
+     box-shadow: 2px 2px 10px 0px #eee inset;
+     width: 50%;
+     min-height: 500px;
+   }
+   #comparison {
+     display: flex;
+     direction: row;
+     margin-bottom: 2rem;
+   }
+   button {
+     width: 100%;
+     border: none;
+     background-color: #279CD7;
+     color: white;
+     font-size: large;
+     padding: 1em;
+     cursor: pointer;
+   }
+  </style>
+</head>
+<body>
+  <h1>Embedded fallback</h1>
+  <div id="comparison">
+    <iframe src="./non-controlled.html" id="reference"></iframe>
+    <iframe src="./controlled.html" id="sample"></iframe>
+  </div>
+  <p>The images in these iframe points to the same asset in the server. But the first is controlled by the service worker and the second is not.</p>
+
+<script src="./index.js"></script>
+</body>
+</html>
+```
+
+non-controlled.html
+
+```html
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Network or cache: non controlled page - ServiceWorker Cookbook</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+   body {
+     text-align: center;
+   }
+  </style>
+</head>
+<body>
+  <h1>Always synchronized</h1>
+  <img src="./asset" alt="sample asset">
+  <p>This image originates from a non controlled page so, if you reload, it will be always synced with the version in the server.</p>
+</body>
+</html>
+```
+
+controlled.html
+
+```html
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Network or cache: controlled page - ServiceWorker Cookbook</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+   body {
+     text-align: center;
+   }
+  </style>
+</head>
+<body>
+  <h1>Network or cache</h1>
+  <img src="./asset" alt="sample asset" />
+  <p>This image request originates from a controlled page so the image will
+    be served by the service worker. The service worker will try to retrieve
+    the most updated content from network but if the answer does not arrive
+    before a timeout, it will fall back to the cached content. Try to
+    <a href="https://developers.google.com/web/tools/chrome-devtools/profile/network-performance/network-conditions?hl=en">
+    adjust throttling</a> to GPRS to see the effects of network latency.</p>
+</body>
+</html>
 ```
 
 

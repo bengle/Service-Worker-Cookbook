@@ -34,7 +34,7 @@ if ('serviceWorker' in navigator) {
     var lastETag = localStorage.currentETag;
     // ETag头字段中通常包含资源的hash值，因此它是检验资源是否最新的一种有效方式
     var isNew =  lastETag !== message.eTag;
-    
+
     if (isRefresh && isAsset && isNew) {
       // 跳过第一次
       if (lastETag) {
@@ -52,7 +52,7 @@ if ('serviceWorker' in navigator) {
   update.onclick = function (evt) {
     var img = document.querySelector('img');
     evt.preventDefault();
-    
+
     caches.open(CACHE)
     // 获取更新返回内容
     .then(function (cache) {
@@ -207,6 +207,105 @@ function refresh(response) {
     });
   });
 }
+```
+
+index.html
+
+```html
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Network or cache - ServiceWorker Cookbook</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+   iframe {
+     display: block;
+     margin: 1rem;
+     box-shadow: 2px 2px 10px 0px #eee inset;
+     width: 50%;
+   }
+   #comparison {
+     display: flex;
+     direction: row;
+     margin-bottom: 2rem;
+   }
+   button {
+     width: 100%;
+     border: none;
+     background-color: #279CD7;
+     color: white;
+     font-size: large;
+     padding: 1em;
+     cursor: pointer;
+   }
+  </style>
+</head>
+<body>
+  <h1>Network or cache</h1>
+  <p>Try to adjust <a href="https://developers.google.com/web/tools/chrome-devtools/profile/network-performance/network-conditions" source="_blank">network throttling</a> to GPRS to see the image falling back to the cached content.</p>
+  <div id="comparison">
+    <iframe src="./non-controlled.html" id="reference"></iframe>
+    <iframe src="./controlled.html" id="sample"></iframe>
+  </div>
+  <p>The images in these iframes point to the same asset in the server. But the first is controlled by the service worker and the second is not.</p>
+  <p>In the server, the image is updated every 10 seconds, try to click on reload to cause new requests from the controlled and uncontrolled pages.</p>
+  <p><button id="reload">Reload</button></p>
+
+<script src="./index.js"></script>
+</body>
+</html>
+```
+
+non-controlled.html
+
+```html
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Network or cache: non controlled page - ServiceWorker Cookbook</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+   body {
+     text-align: center;
+   }
+  </style>
+</head>
+<body>
+  <h1>Always synchronized</h1>
+  <img src="./asset" alt="sample asset">
+  <p>This image originates from a non controlled page so, if you reload, it will be always synced with the version in the server.</p>
+</body>
+</html>
+```
+
+controlled.html
+
+```html
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Network or cache: controlled page - ServiceWorker Cookbook</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+   body {
+     text-align: center;
+   }
+  </style>
+</head>
+<body>
+  <h1>Network or cache</h1>
+  <img src="./asset" alt="sample asset" />
+  <p>This image request originates from a controlled page so the image will
+    be served by the service worker. The service worker will try to retrieve
+    the most updated content from network but if the answer does not arrive
+    before a timeout, it will fall back to the cached content. Try to
+    <a href="https://developers.google.com/web/tools/chrome-devtools/profile/network-performance/network-conditions?hl=en">
+    adjust throttling</a> to GPRS to see the effects of network latency.</p>
+</body>
+</html>
 ```
 
 
