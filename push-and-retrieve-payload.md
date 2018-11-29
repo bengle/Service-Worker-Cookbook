@@ -48,7 +48,6 @@ Notification Time-To-Live: <input id='notification-ttl' type='number' value='0'>
 <script src="./index.js"></script>
 </body>
 </html>
-
 ```
 
 index.js
@@ -69,7 +68,7 @@ navigator.serviceWorker.ready
         // 获取服务的公钥
         const response = await fetch('./vapidPublicKey');
         const vapidPublicKey = await response.text();
-        // chrome不支持base64编码的vapidPublicKey，这里使用tool.js中定义的urlBase64ToUint8Array方法处理
+        // chrome不支持base64编码的vapidPublicKey，这里使用tools.js中定义的urlBase64ToUint8Array方法处理
         const convertedVapidKey = urlBase64ToUint8Array(vapidPublicKey);
         // 没有订阅信息则订阅用户(userVisibleOnly允许我们指定哪些消息不发送给用户)
         return registration.pushManager.subscribe({
@@ -88,7 +87,7 @@ navigator.serviceWorker.ready
       subscription: subscription
     }),
   });
-  
+
   document.getElementById('doIt').onclick = function() {
     const payload = document.getElementById('notification-payload').value;
     const delay = document.getElementById('notification-delay').value;
@@ -119,10 +118,10 @@ function urlBase64ToUint8Array(base64String) {
   var base64 = (base64String + padding)
     .replace(/\-/g, '+')
     .replace(/_/g, '/');
- 
+
   var rawData = window.atob(base64);
   var outputArray = new Uint8Array(rawData.length);
- 
+
   for (var i = 0; i < rawData.length; ++i) {
     outputArray[i] = rawData.charCodeAt(i);
   }
