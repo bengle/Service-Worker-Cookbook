@@ -8,4 +8,5 @@
 * [Embedded fallback](embedded-fallback.md)
 * [Push and Retrieve Payload](push-and-retrieve-payload.md)
 * [Push Payload](push-payload.md)
+* [Push Rich](push-rich.md)
 
