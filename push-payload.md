@@ -1,6 +1,6 @@
-# Push and Retrieve Payload
+# Push Payload
 
-本案例展示了使用service worker推送消息，在收到消息后展示消息内容。
+在这个例子中，我们可以学会发送和接收包含各种内容的推送消息，消息可以包含除字符串之外的多种数据格式（字符串、ArrayBuffer、Blob、JSON等）。
 
 # 难度等级
 
@@ -8,47 +8,13 @@
 
 # 应用场景
 
-发送推送消息，收到推送消息后展示消息内容。
+推送消息内容除了文本还可以axing应用程序提供各种有效数据格式内容，当我们需要向应用推送富负载内容的时候可以参考本章是如何做的。
 
 # 方案类型
 
 网络推送
 
-# 代码示例
-
-push-get-payload.html
-
-```html
-<!doctype html>
-<html>
-<head>
-  <meta charset="utf-8">
-  <title>Push Notification with payload retrieval - ServiceWorker Cookbook</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body {
-      font-family: monospace;
-      font-size: 1rem;
-      white-space: pre-wrap;
-    }
-  </style>
-</head>
-<body>
-<p>This demo shows how to send push notifications and retrieve a payload when the notification is received.</p>
-
-<form>
-Notification payload: <input id='notification-payload' type='text' value='Insert here a payload'></input>
-Notification delay: <input id='notification-delay' type='number' value='5'></input> seconds
-Notification Time-To-Live: <input id='notification-ttl' type='number' value='0'></input> seconds
-</form>
-
-<button id="doIt">Request sending a notification!</button>
-
-<script src="/tools.js"></script>
-<script src="./index.js"></script>
-</body>
-</html>
-```
+# 示例代码
 
 index.js
 
@@ -110,25 +76,6 @@ navigator.serviceWorker.ready
 });
 ```
 
-tools.js
-
-```js
-function urlBase64ToUint8Array(base64String) {
-  var padding = '='.repeat((4 - base64String.length % 4) % 4);
-  var base64 = (base64String + padding)
-    .replace(/\-/g, '+')
-    .replace(/_/g, '/');
-
-  var rawData = window.atob(base64);
-  var outputArray = new Uint8Array(rawData.length);
-
-  for (var i = 0; i < rawData.length; ++i) {
-    outputArray[i] = rawData.charCodeAt(i);
-  }
-  return outputArray;
-}
-```
-
 server.js
 
 ```js
@@ -154,8 +101,6 @@ webPush.setVapidDetails(
   process.env.VAPID_PRIVATE_KEY
 );
 
-const payloads = {};
-
 module.exports = function(app, route) {
   app.get(route + 'vapidPublicKey', function(req, res) {
     res.send(process.env.VAPID_PUBLIC_KEY);
@@ -174,20 +119,15 @@ module.exports = function(app, route) {
     };
 
     setTimeout(function() {
-      payloads[req.body.subscription.endpoint] = payload;
-      webPush.sendNotification(subscription, null, options)
+      webPush.sendNotification(subscription, payload, options)
       .then(function() {
         res.sendStatus(201);
       })
       .catch(function(error) {
-        res.sendStatus(500);
         console.log(error);
+        res.sendStatus(500);
       });
     }, req.body.delay * 1000);
-  });
-
-  app.get(route + 'getPayload', function(req, res) {
-    res.send(payloads[req.query.endpoint]);
   });
 };
 ```
@@ -195,36 +135,74 @@ module.exports = function(app, route) {
 service-worker.js
 
 ```js
-function getEndpoint() {
-  return self.registration.pushManager.getSubscription()
-  .then(function(subscription) {
-    if (subscription) {
-      return subscription.endpoint;
-    }
-
-    throw new Error('User not subscribed');
-  });
-}
-// 注册push事件
+// 注册push事件监听
 self.addEventListener('push', function(event) {
+  /*
+    从event.data（一个PushMessageData对象）中解析出有效的文本数据，ArrayBuffer、Blob、JSON等格式也是支持的
+    具体使用方法可以查看文档：https://developer.mozilla.org/en-US/docs/Web/API/PushMessageData.
+  */
+  const payload = event.data ? event.data.text() : 'no payload';
   // 在notification创建成功前保持service worker激活状态
   event.waitUntil(
-    getEndpoint()
-    .then(function(endpoint) {
-      // 通过一个GET请求从服务端获取数据，这里将endpoint简单用作用户id
-      return fetch('./getPayload?endpoint=' + endpoint);
-    })
-    .then(function(response) {
-      return response.text();
-    })
-    .then(function(payload) {
-      // 将‘ServiceWorker Cookbook’作为推送消息title，接口数据作为消息体，显示推送消息
-      self.registration.showNotification('ServiceWorker Cookbook', {
-        body: payload,
-      });
+    // 将‘ServiceWorker Cookbook’作为推送消息title，接口数据作为消息体，显示推送消息
+    self.registration.showNotification('ServiceWorker Cookbook', {
+      body: payload,
     })
   );
 });
+```
+
+tools.js
+
+```js
+function urlBase64ToUint8Array(base64String) {
+  var padding = '='.repeat((4 - base64String.length % 4) % 4);
+  var base64 = (base64String + padding)
+    .replace(/\-/g, '+')
+    .replace(/_/g, '/');
+
+  var rawData = window.atob(base64);
+  var outputArray = new Uint8Array(rawData.length);
+
+  for (var i = 0; i < rawData.length; ++i) {
+    outputArray[i] = rawData.charCodeAt(i);
+  }
+  return outputArray;
+}
+```
+
+index.html
+
+```html
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Push Notification with payload - ServiceWorker Cookbook</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body {
+      font-family: monospace;
+      font-size: 1rem;
+      white-space: pre-wrap;
+    }
+  </style>
+</head>
+<body>
+<p>This demo shows how to send push notifications with a payload.</p>
+
+<form>
+Notification payload: <input id='notification-payload' type='text' value='Insert here a payload'></input>
+Notification delay: <input id='notification-delay' type='number' value='5'></input> seconds
+Notification Time-To-Live: <input id='notification-ttl' type='number' value='0'></input> seconds
+</form>
+
+<button id="doIt">Request sending a notification!</button>
+
+<script src="/tools.js"></script>
+<script src="./index.js"></script>
+</body>
+</html>
 ```
 
 
