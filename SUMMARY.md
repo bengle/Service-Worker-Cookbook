@@ -9,4 +9,6 @@
 * [Push and Retrieve Payload](push-and-retrieve-payload.md)
 * [Push Payload](push-payload.md)
 * [Push Rich](push-rich.md)
+* [Push Simple](push-simple.md)
+* [Push Tag](push-tag.md)
 
