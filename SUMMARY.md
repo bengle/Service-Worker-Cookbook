@@ -14,4 +14,5 @@
 * [Push Quota](push-quota.md)
 * [Push Clients](push-clients.md)
 * [Push Subscription](push-subscription.md)
+* [Immediate Claim](immediate-claim.md)
 
