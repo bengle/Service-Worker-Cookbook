@@ -15,4 +15,6 @@
 * [Push Clients](push-clients.md)
 * [Push Subscription](push-subscription.md)
 * [Immediate Claim](immediate-claim.md)
+* [Message Relay](message-relay.md)
+* [Fetching Remote Resources](fetching-remote-resources.md)
 
