@@ -1,6 +1,6 @@
 # Offline Fallback
 
-本章演示在用户离线情况下如何使用缓存响应资源，达到可以离线使用应用的目的。
+本章演示在用户离线情况下如何使用缓存响应资源。
 
 # 难度等级
 
@@ -31,7 +31,6 @@
 index.html
 
 ```html
-
 <!doctype html>
 <html>
 <head>
@@ -50,8 +49,8 @@ index.html
 <strong>Yay, you are online!</strong>
 Now go offline and <a href="#" id="refresh">refresh</a>!
 
-Registered ServiceWorker:	<span id="register">Did not register</span>
-Active Controller:	<span id="controller">Did not activate</span>
+Registered ServiceWorker:    <span id="register">Did not register</span>
+Active Controller:    <span id="controller">Did not activate</span>
 
 ServiceWorker logs:
 <div id="log">Here be logs: <br></div>
@@ -61,7 +60,6 @@ ServiceWorker logs:
 <script src="./index.js"></script>
 </body>
 </html>
-
 ```
 
 index.js
