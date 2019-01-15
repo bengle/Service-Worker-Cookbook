@@ -19,7 +19,7 @@
 * [Fetching Remote Resources](fetching-remote-resources.md)
 * [Live Flowchart](live-flowchart.md)
 * [Offline Fallback](offline-fallback.md)
-* Offline Status
+* [Offline Status](offline-status.md)
 * JSON Cache
 * Local Download
 * Virtual Server
