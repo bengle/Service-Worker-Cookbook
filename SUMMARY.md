@@ -20,7 +20,7 @@
 * [Live Flowchart](live-flowchart.md)
 * [Offline Fallback](offline-fallback.md)
 * [Offline Status](offline-status.md)
-* JSON Cache
+* [JSON Cache](json-cache.md)
 * Local Download
 * Virtual Server
 * API Analytics
