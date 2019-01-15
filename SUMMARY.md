@@ -17,4 +17,11 @@
 * [Immediate Claim](immediate-claim.md)
 * [Message Relay](message-relay.md)
 * [Fetching Remote Resources](fetching-remote-resources.md)
+* [Live Flowchart](live-flowchart.md)
+* Offline Fallback
+* Offline Status
+* JSON Cache
+* Local Download
+* Virtual Server
+* API Analytics
 
