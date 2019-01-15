@@ -18,7 +18,7 @@
 * [Message Relay](message-relay.md)
 * [Fetching Remote Resources](fetching-remote-resources.md)
 * [Live Flowchart](live-flowchart.md)
-* Offline Fallback
+* [Offline Fallback](offline-fallback.md)
 * Offline Status
 * JSON Cache
 * Local Download
