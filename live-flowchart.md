@@ -462,12 +462,12 @@ console.debug('service-worker.js: this is a service worker');
   4.随后在访问service worker控制页面时，尝试安装worker；
   install事件总是第一个发送到service worker（这里可以添加启动indexDB和缓存站点资源）
   这与安装native应用程序或Firefox OS应用程序的过程非常相似-使所有内容都可以离线使用；
-  更多关于InstallEvent的信息可以参考[这里](https://developer.mozilla.org/en-US/docs/Web/API/InstallEvent)
+  更多关于InstallEvent的信息可以参考:https://developer.mozilla.org/en-US/docs/Web/API/InstallEvent
   5.当oninstall事件触发，就表示service worker正式安装完成了；
   6.接下来是activation，当service worker安装完成后就会触发一个activate事件；
   在onactivate事件中最常用的是清除上一个版本service worker使用的资源；
   7.现在在register()成功后打开的页面都将受到service worker控制。即，document已经开始其包含service worker或者不包含service worker的生命周期，这个状态会随生命周期一直保存，因此没有被service worker控制的页面必须重新加载才可以被其控制；
-  更多关于FetchEvent的说明可以参考这里
+  更多关于FetchEvent的说明可以参考:https://developer.mozilla.org/en-US/docs/Web/API/FetchEvent
 */
 this.addEventListener('install', function oninstall(event) {
   console.info('Service worker installed, oninstall fired');
