@@ -80,44 +80,44 @@ index.html
 ```html
 <!doctype html>
 <html>
-	<head>
-		<title>Live flowchart</title>
-		<link href="style.css" type="text/css" rel="stylesheet" />
-	</head>
-	<body>
-		<div class="container">
-			<div class="flowchart">
-				<h1><a href="https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API/Using_Service_Workers" target="_blank">Using Service Workers</a></h1>
+    <head>
+        <title>Live flowchart</title>
+        <link href="style.css" type="text/css" rel="stylesheet" />
+    </head>
+    <body>
+        <div class="container">
+            <div class="flowchart">
+                <h1><a href="https://developer.mozilla.org/en-US/docs/Web/API/Service_Worker_API/Using_Service_Workers" target="_blank">Using Service Workers</a></h1>
 
-				<img alt="sw-flowchart" src="https://qiyouxiaogui.nos-eastchina1.126.net/security-error.png" />
-			</div>
+                <img alt="sw-flowchart" src="https://qiyouxiaogui.nos-eastchina1.126.net/security-error.png" />
+            </div>
 
-			<div class="playground">
-				<div class="inputs">
-					<span class="title">Service Worker</span>
-				    <input id="swscripturl" placeholder="SW path" value="./service-worker.js" />
-				    <span class="title">Options: </span>
-				    <input id="swscope" placeholder="scope (optional)" />
-				    <span>This works: './service-worker.js' (in scope './')</span>
-				</div>
-				<div class="actions">
-					<ul>
-						<li><button id="swinstall" disabled>Register specified SW</button></li>
-					    <li><button id="reloadapp">Reload document</button></li>
-					    <li><button id="swuninstall" disabled>Unregister active SW</button></li>
-					</ul>
-				</div>
-			    <div id="log" class="log"></div> 
-				<div class="credits">
-				 	<a href="http://www.francesco.iovine.name/" target="_blank">@franciov</a>
-			 	</div>		    
-		 	</div>
+            <div class="playground">
+                <div class="inputs">
+                    <span class="title">Service Worker</span>
+                    <input id="swscripturl" placeholder="SW path" value="./service-worker.js" />
+                    <span class="title">Options: </span>
+                    <input id="swscope" placeholder="scope (optional)" />
+                    <span>This works: './service-worker.js' (in scope './')</span>
+                </div>
+                <div class="actions">
+                    <ul>
+                        <li><button id="swinstall" disabled>Register specified SW</button></li>
+                        <li><button id="reloadapp">Reload document</button></li>
+                        <li><button id="swuninstall" disabled>Unregister active SW</button></li>
+                    </ul>
+                </div>
+                <div id="log" class="log"></div> 
+                <div class="credits">
+                     <a href="http://www.francesco.iovine.name/" target="_blank">@franciov</a>
+                 </div>            
+             </div>
 
-			<script src="logger.js"></script>
-			<script src="service-worker-util.js"></script>
-			<script src="app.js"></script>
-		</div>
-	</body>
+            <script src="logger.js"></script>
+            <script src="service-worker-util.js"></script>
+            <script src="app.js"></script>
+        </div>
+    </body>
 </html>
 ```
 
@@ -149,7 +149,7 @@ App.prototype.constructor = function constructor() {
         thisapp.disableCoolFeatures();
       }
     );
-    
+
     if (this.swUtil.isServiceWorkerControllingThisApp()) {
       Logger.info('App code run as expected');
 
@@ -168,7 +168,7 @@ App.prototype.enableCoolFeatures = function enableCoolFeatures() {
 
   Logger.newSection();
   Logger.log('Enabling cool features...');
-  
+
   scriptURL = document.querySelector('#swscripturl');
   scope = document.querySelector('#swscope');
 
@@ -191,7 +191,7 @@ App.prototype.enableCoolFeatures = function enableCoolFeatures() {
       '(scope defaults to the path the script sits in)'
     );
   }
-  
+
   this.swUtil.registerServiceWorker(scriptURL.value, scope.value).then(
       this.disableSWRegistration, // success
       this.enableSWRegistration // error
@@ -315,9 +315,9 @@ SWUtil.prototype.isServiceWorkerControllingThisApp = function() {
   Logger.log('Are Service Workers in control?');
 
   Logger.debug('checking navigator.serviceWorker.controller');
-  
+
   if (navigator.serviceWorker.controller) {
-  
+
     Logger.info('A service worker controls this app');
     Logger.debug('The following service worker controls this app: ');
     Logger.debug(navigator.serviceWorker.controller.scriptURL +
@@ -342,7 +342,7 @@ SWUtil.prototype.registerServiceWorker = function(scriptURL, scope) {
 
   Logger.debug('navigator.serviceWorker.register(scriptURL, scope)');
   Logger.debug('scriptURL: ' + scriptURL);
-  
+
   if (scope) {
     swRegisterSecondParam.scope = scope;
     Logger.debug('options.scope: ' + swRegisterSecondParam.scope);
@@ -357,7 +357,7 @@ SWUtil.prototype.registerServiceWorker = function(scriptURL, scope) {
         function registrationSuccess(swRegistration) {
           Logger.debug('registrationSuccess(swRegistration)');
           Logger.debug(swRegistration);
-          
+
           if (swRegistration.active) {
             Logger.debug('Registering the active service worker again: ');
             Logger.debug(swRegistration.active.scriptURL +
@@ -467,7 +467,7 @@ console.debug('service-worker.js: this is a service worker');
   6.接下来是activation，当service worker安装完成后就会触发一个activate事件；
   在onactivate事件中最常用的是清除上一个版本service worker使用的资源；
   7.现在在register()成功后打开的页面都将受到service worker控制。即，document已经开始其包含service worker或者不包含service worker的生命周期，这个状态会随生命周期一直保存，因此没有被service worker控制的页面必须重新加载才可以被其控制；
-  更多关于FetchEvent的说明可以参考[这里](https://developer.mozilla.org/en-US/docs/Web/API/FetchEvent)
+  更多关于FetchEvent的说明可以参考这里
 */
 this.addEventListener('install', function oninstall(event) {
   console.info('Service worker installed, oninstall fired');
