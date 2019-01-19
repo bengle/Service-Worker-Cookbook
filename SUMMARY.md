@@ -22,6 +22,6 @@
 * [Offline Status](offline-status.md)
 * [JSON Cache](json-cache.md)
 * [Local Download](local-download.md)
-* Virtual Server
+* [Virtual Server](virtual-server.md)
 * API Analytics
 
