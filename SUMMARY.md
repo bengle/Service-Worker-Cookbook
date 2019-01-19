@@ -23,5 +23,5 @@
 * [JSON Cache](json-cache.md)
 * [Local Download](local-download.md)
 * [Virtual Server](virtual-server.md)
-* API Analytics
+* [API Analytics](api-analytics.md)
 
