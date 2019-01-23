@@ -24,4 +24,7 @@
 * [Local Download](local-download.md)
 * [Virtual Server](virtual-server.md)
 * [API Analytics](api-analytics.md)
+* [Load Balancer](load-balancer.md)
+* [Cache from ZIP](cache-from-zip.md)
+* [Dependency Injection](dependency-injection.md)
 
