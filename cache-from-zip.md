@@ -145,7 +145,7 @@ importScripts('./lib/inflate.js');
 
 var ZIP_URL = './package.zip';
 zip.useWebWorkers = false;
-
+// 在install阶段，扩展event以恢复此案例中用到的包并安装到离线缓存中
 self.oninstall = function(event) {
   event.waitUntil(
     fetch(ZIP_URL)
@@ -157,11 +157,11 @@ self.oninstall = function(event) {
       .then(self.skipWaiting.bind(self)) // control clients ASAP
   );
 };
-
+// service worker立即接管客户端
 self.onactivate = function(event) {
   event.waitUntil(self.clients.claim());
 };
-
+// 用缓存响应请求，如果缓存没有就走网络请求
 self.onfetch = function(event) {
   event.respondWith(openCache().then(function(cache) {
     return cache.match(event.request).then(function(response) {
@@ -169,13 +169,13 @@ self.onfetch = function(event) {
     });
   }));
 };
-
+// 使用zip.js的API读取zip文件
 function getZipReader(data) {
   return new Promise(function(fulfill, reject) {
     zip.createReader(new zip.ArrayBufferReader(data), fulfill, reject);
   });
 }
-
+// 用reader读取zipfile中的每个文件再将他们添加到离线缓存
 function cacheContents(reader) {
   return new Promise(function(fulfill, reject) {
     reader.getEntries(function(entries) {
@@ -184,11 +184,13 @@ function cacheContents(reader) {
     });
   });
 }
-
+// 跳过文件夹缓存文件
 function cacheEntry(entry) {
   if (entry.directory) { return Promise.resolve(); }
 
   return new Promise(function(fulfill, reject) {
+    // writer指定读取的数据格式
+    // 这个例子中我们想要一个通用的blob，因为blob是response构造函数支持的格式之一
     entry.getData(new zip.BlobWriter(), function(data) {
       return openCache().then(function(cache) {
         var location = getLocation(entry.filename);
