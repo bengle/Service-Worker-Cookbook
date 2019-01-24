@@ -59,7 +59,6 @@ index.html
   <script src="./index.js"></script>
 </body>
 </html>
-
 ```
 
 index.js
@@ -72,7 +71,7 @@ var serverLoadInputs = [
   $('#load-2'),
   $('#load-3')
 ];
-
+// 注册service worker，激活image选项
 navigator.serviceWorker.register('service-worker.js');
 navigator.serviceWorker.ready.then(enableUI);
 
@@ -91,12 +90,14 @@ function getServerLoads() {
     return response.json();
   });
 }
-
+// 点击load-configuration按钮时发送负载值到后端模拟服务负载
 $('#load-configuration').onsubmit = function(event) {
   event.preventDefault();
+  // 从input获取fake级别
    var loads = serverLoadInputs.map(function(input) {
     return parseInt(input.value, 10);
   });
+  // 发送请求以配置序列化正文的负载级别并正确设置请求内容的header
   fetch(addSession('./server-loads'), {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
@@ -107,11 +108,11 @@ $('#load-configuration').onsubmit = function(event) {
     $('#loads-label').textContent = result;
   });
 };
-  
+
 $('#image-selector').onchange = function() {
   var imgUrl = $('select').value;
   if (imgUrl) {
-  
+     // 添加时间戳参数_b避免HTTP缓存
      $('img').src = addSession(imgUrl) + '&_b=' + Date.now();
      $('img').onload = function() {
       if (window.parent !== window) {
@@ -121,10 +122,11 @@ $('#image-selector').onchange = function() {
     };
   }
 };
-
+// URL中添加session字段
 function addSession(url) {
   return url + '?session=' + getSession();
 }
+// 用基于localstorage存储的随机字符串简单模拟一个session管理器
 function getSession() {
   var session = localStorage.getItem('session');
   if (!session) {
@@ -207,7 +209,7 @@ function selectServer(serverLoads) {
   // 以最小负载查找服务器索引虽然效率不高但非常清晰
   var min = Math.min.apply(Math, serverLoads);
   var serverIndex = serverLoads.indexOf(min);
-  
+
   return './server-' + (serverIndex + 1);
 }
 ```
