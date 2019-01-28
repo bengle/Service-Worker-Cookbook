@@ -60,13 +60,13 @@ index.html
 <script src="./index.js"></script>
 </body>
 </html>
-
 ```
 
 index.js
 
 ```js
 var ENDPOINT = 'api/quotations';
+// 注册service worker，显示quotation列表
 if (navigator.serviceWorker.controller) {
   loadQuotations();
 } else {
@@ -79,9 +79,11 @@ if (navigator.serviceWorker.controller) {
   };
   navigator.serviceWorker.register('service-worker.js');
 }
+// 强制清空队列请求
 window.addEventListener('online', function() {
   loadQuotations();
 });
+// 点击add-form按钮，添加条新的quote、author和post
 document.getElementById('add-form').onsubmit = function(event) {
   event.preventDefault();
 
