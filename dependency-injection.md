@@ -67,12 +67,10 @@ window.onhashchange = function() {
   var currentInjector = getCurrentInjector();
 
   if (injector !== currentInjector) {
-    // When the new injector is activated, reload...
+    // 当新的注入器激活就刷新页面
     navigator.serviceWorker.oncontrollerchange = function() {
       this.controller.onstatechange = function() {
-        // ...if this were a real framework, instead of reloading we would
-        // start to load the view scripts in an asynchronous way but providing
-        // such mechanisms is out of the scope of this demo.
+        // 现实中的框架可能会使用异步加载更新文件，而不是刷新页面
         if (this.state === 'activated') {
           window.location.reload();
         }
@@ -82,16 +80,16 @@ window.onhashchange = function() {
   }
 };
 
-// Force the initial check.
+// 调用初始化
 window.onhashchange();
 
-// Register one or another Service Worker depending on the type of environment.
+// 根据环境类型注册新的service worker
 function registerInjector(injector) {
   var injectorUrl = injector + '-sw.js';
   return navigator.serviceWorker.register(injectorUrl);
 }
 
-// Gets the current injector inspecting the service worker registered, if any.
+// 用已经注册的service worker监控当前注入器
 function getCurrentInjector() {
   var injector;
   var controller = navigator.serviceWorker.controller;
@@ -120,8 +118,7 @@ actual-dialogs.js
 
 ```js
 (function(window) {
-  // The real implementation of dialog rely on the browser dialogs but it could
-  // implement their own full HTML5 UI.
+  // 实际的dialog可以用window自带的功能，但是通常会重新定义HTML5的UI
   window.dialogs = {
     alert: function(msg) {
       window.alert(msg);
@@ -158,30 +155,25 @@ function onActivate(event) {
   event.waitUntil(self.clients.claim());
 }
 
-// Easy, simply try to find an actual resource URL for an abstract request.
-// If not found, let's fetch the abstract resource. In this demo, this never
-// fails.
+// 简单实现一个从抽象请求中找到实际资源URL的方法，如果没有找到就直接请求这个抽象资源，在本例子中没有模拟失败的
 function onFetch(event) {
   var abstractResource = event.request.url;
   var actualResource = findActualResource(abstractResource);
   event.respondWith(fetch(actualResource || abstractResource));
 }
 
-// Look inside mapping to get the actual resource URL for the abstract resource URL
-// passed as parameter. This act like the dependency factory in charge of creating
-// the objects to be injected.
 function findActualResource(abstractResource) {
   var actualResource;
   var patterns = Object.keys(mapping);
   for (var index = 0; index < patterns.length; index++) {
     var pattern = patterns[index];
-    // A really silly matcher just for learning purposes.
+    // 一个超简单的匹配器仅为学习目的
     if (abstractResource.endsWith(pattern)) {
       actualResource = mapping[pattern];
       break;
     }
   }
-  // Can return undefined if there is no actual resource.
+  // 如果没有资源则返回undefined
   return actualResource;
 }
 ```
@@ -190,8 +182,6 @@ mock-dialogs.js
 
 ```js
 (function(window) {
-  // The module mock dialogs exports a non blocking fake implementation
-  // that simply logs the calls.
   window.dialogs = {
     alert: function(msg) {
       console.log('alert:', msg);
@@ -215,11 +205,10 @@ production-sw.js
 ```js
 importScripts('injector.js');
 
-// The default mapping contains the map for abstract resources to their
-// concrete counterparts.
+// 默认映射包含抽象资源到其具体对应的映射。
 importScripts('default-mapping.js');
 
-// All the functionality is in `injector.js` here we only wire the listeners.
+// 所有事件都定义在`injector.js`，这里我们只是调用对应方法
 self.onfetch = onFetch;
 self.oninstall = onInstall;
 self.onactivate = onActivate;
@@ -230,10 +219,10 @@ testing-sw.js
 ```js
 importScripts('injector.js');
 
-// Load the default mapping between abstract and concrete resources.
+// 加载抽象和具体资源的映射文件
 importScripts('default-mapping.js');
 
-// But override ``utils/dialogs`` to serve the mockup instead.
+// 重写``utils/dialogs``来替代fuwu模型
 mapping['utils/dialogs'] = 'mock-dialogs.js';
 
 self.onfetch = onFetch;
