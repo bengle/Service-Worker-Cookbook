@@ -27,7 +27,7 @@
 * [Load Balancer](load-balancer.md)
 * [Cache from ZIP](cache-from-zip.md)
 * [Dependency Injection](dependency-injection.md)
-* Request Deferrer
+* [Request Deferrer](request-deferrer.md)
 * Cache then Network
 * Render Store
 
