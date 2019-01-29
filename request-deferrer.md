@@ -314,7 +314,8 @@ worker.post(root + 'api/quotations?*', tryOrFallback(new Response(null, {
 worker.init();
 // 使用Mozilla的localforage db包装器，我们可以快速设置多功能键值数据库
 // 我们用它来存储延迟请求的队列
-// enqueue将请求添加到队列，由于IndexedDB限制，我们无法保存请求和响应的对象
+// enqueue将请求添加到队列，由于IndexedDB限制，我们无法保存请求和响应的对象，因此需要一个替代表示
+// 这是调用serialize()的原因
 function enqueue(request) {
   return serialize(request).then(function(serialized) {
     localforage.getItem('queue').then(function(queue) {
@@ -335,6 +336,7 @@ function flushQueue() {
       return Promise.resolve();
     }
     console.log('Sending ', queue.length, ' requests...');
+    // 需要错误处理，实际上，这是假设队列中所有请求都是成功的，只有请求成功完成时才从队列中弹出，因此队列应该是逐步清空的
     return sendInOrder(queue).then(function() {
       return localforage.setItem('queue', []);
     });
