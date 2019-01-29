@@ -89,6 +89,7 @@ document.getElementById('add-form').onsubmit = function(event) {
 
   var newQuote = document.getElementById('new-quote').value.trim();
   if (!newQuote) { return; }
+  // 如果quote-author为空则用Anonymous代替
   var quoteAuthor =
     document.getElementById('quote-author').value.trim() || 'Anonymous';
   var quote = { text: newQuote, author: quoteAuthor };
@@ -96,6 +97,8 @@ document.getElementById('add-form').onsubmit = function(event) {
   var body = JSON.stringify(quote);
   fetch(addSession(ENDPOINT), { method: 'POST', headers: headers, body: body })
     .then(function(response) {
+      // 已接受但未添加，这点区别很重要
+      // 我们使用它来支持离线情况下对quotations的延迟加载
       if (response.status === 202) {
         return quote;
       }
@@ -109,6 +112,7 @@ document.getElementById('add-form').onsubmit = function(event) {
       }
     });
 };
+// 简单的GET请求(通常是fetch)就足够完成对quotes的查询了
 function loadQuotations() {
   fetch(addSession(ENDPOINT))
     .then(function(response) {
@@ -116,6 +120,7 @@ function loadQuotations() {
     })
     .then(showQuotations);
 }
+// 用quotation填充table
 function showQuotations(collection) {
   var table = document.getElementById('quotations');
   table.innerHTML = '';
@@ -126,6 +131,7 @@ function showQuotations(collection) {
     window.parent.document.body.dispatchEvent(new CustomEvent('iframeresize'));
   }
 }
+// 用quote数据生成表格一行内容
 function getRowFor(quote) {
   var tr = document.createElement('TR');
   var id = quote.id;
@@ -173,6 +179,8 @@ function deleteQuote(id) {
 function addSession(url) {
   return url + '?session=' + getSession();
 }
+// 在localstorage中用session字段做一个简单的session管理器
+// session使用日期和随机数的字符串表示
 function getSession() {
   var session = localStorage.getItem('session');
   if (!session) {
@@ -261,12 +269,18 @@ service-worker.js
 /* global importScripts, ServiceWorkerWare, localforage */
 importScripts('./lib/ServiceWorkerWare.js');
 importScripts('./lib/localforage.js');
-
+// 定义路由的根路径
+// 如果service worker的URL是http://example.com/path/to/sw.js，那么root路径就是http://example.com/path/to/
 var root = (function() {
   var tokens = (self.location + '').split('/');
   tokens[tokens.length - 1] = '';
   return tokens.join('/');
 })();
+// 使用Mozilla的ServiceWorkerWare，我们可以快速为虚拟服务器设置路由
+// 你可以从下面的案例代码中方便的查看虚拟服务器的路由配置
+// 我们的做法是，首先检查是否在线，
+// 如果不在线将请求排入队列并提供模拟的响应
+// 如果在线则将队列中的请求通过网络拿到真实响应
 var worker = new ServiceWorkerWare();
 function tryOrFallback(fakeResponse) {
   return function(req, res) {
@@ -298,6 +312,9 @@ worker.post(root + 'api/quotations?*', tryOrFallback(new Response(null, {
   status: 202
 })));
 worker.init();
+// 使用Mozilla的localforage db包装器，我们可以快速设置多功能键值数据库
+// 我们用它来存储延迟请求的队列
+// enqueue将请求添加到队列，由于IndexedDB限制，我们无法保存请求和响应的对象
 function enqueue(request) {
   return serialize(request).then(function(serialized) {
     localforage.getItem('queue').then(function(queue) {
