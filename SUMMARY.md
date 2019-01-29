@@ -29,5 +29,5 @@
 * [Dependency Injection](dependency-injection.md)
 * [Request Deferrer](request-deferrer.md)
 * [Cache then Network](cache-then-network.md)
-* Render Store
+* [Render Store](render-store.md)
 

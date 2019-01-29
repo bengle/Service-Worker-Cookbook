@@ -59,7 +59,6 @@ index.html
   <script src='./index.js'></script>
 </body>
 </html>
-
 ```
 
 index.js
@@ -115,12 +114,12 @@ function handleFetchCompletion(res) {
   if (shouldNetworkError) {
     throw new Error('Network error');
   }
-  
+
   var resClone = res.clone();
   caches.open(cacheName).then(function(cache) {
     cache.put(dataUrl, resClone);
   });
-  
+
   res.json().then(function(data) {
     updatePage(data);
     gotNetworkData = true;
@@ -143,7 +142,7 @@ getDataButton.addEventListener('click', function handleClick() {
   disableUI();
   networkStatus.textContent = 'Fetching...';
   networkFetchStartTime = Date.now();
-  
+
   var cacheBuster = Date.now();
   var networkFetch = fetch(dataUrl + '?cacheBuster=' + cacheBuster, {
     mode: 'cors',
