@@ -1,4 +1,8 @@
-# Virtual Server
+# 如果quote-author为空则用Anonymous代替
+
+```js
+Virtual Server
+```
 
 本案例演示如何用service worker模拟一个远程服务器。
 
@@ -14,7 +18,7 @@
 
 使用REST API我们可以将客户端与业务逻辑分离，业务逻辑实际上是放在远程服务器上独立运行。使用service worker我们同样可以这么做，只需要将业务逻辑移动到响应fetch事件的service worker上来。
 
-我们不需要自己根据逻辑来区分路由和请求方法，而使用\[ServiceWorkerWare\]\(https://github.com/gaia-components/serviceworkerware\)或者\[sw-toolbox\]\(https://github.com/GoogleChrome/sw-toolbox\#defining-routes\)这两个库的路有功能声明worker工作逻辑。
+我们不需要自己根据逻辑来区分路由和请求方法，而使用\[ServiceWorkerWare\]\([https://github.com/gaia-components/serviceworkerware\)或者\[sw-toolbox\]\(https://github.com/GoogleChrome/sw-toolbox\#defining-routes\)这两个库的路有功能声明worker工作逻辑。](https://github.com/gaia-components/serviceworkerware%29或者[sw-toolbox]%28https://github.com/GoogleChrome/sw-toolbox#defining-routes%29这两个库的路有功能声明worker工作逻辑。)
 
 客户端代码几乎和API Analytics一章相同，然而远程Express服务器已经完全由service worker取代。
 
@@ -47,7 +51,6 @@ index.html
 <script src="./index.js"></script>
 </body>
 </html>
-
 ```
 
 index.js
@@ -71,9 +74,9 @@ if (navigator.serviceWorker.controller) {
 document.getElementById('add-form').onsubmit = function(event) {
   event.preventDefault();
   var newQuote = document.getElementById('new-quote').value.trim();
-  
+
   if (!newQuote) { return; }
-  // 匿名quote留空表示
+  // 如果quote-author为空则用Anonymous代替
   var quoteAuthor = document.getElementById('quote-author').value.trim() || 'Anonymous';
   var quote = { text: newQuote, author: quoteAuthor };
   var headers = { 'content-type': 'application/json' };

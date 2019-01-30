@@ -74,7 +74,7 @@ document.getElementById('add-form').onsubmit = function(event) {
   var newQuote = document.getElementById('new-quote').value.trim();
 
   if (!newQuote) { return; }
-  // 匿名quote留空表示
+  // 如果quote-author为空则用Anonymous代替
   var quoteAuthor = document.getElementById('quote-author').value.trim() || 'Anonymous';
   var quote = { text: newQuote, author: quoteAuthor };
   var headers = { 'content-type': 'application/json' };
